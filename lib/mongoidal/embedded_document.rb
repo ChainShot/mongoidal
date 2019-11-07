@@ -31,13 +31,11 @@ module Mongoidal
 
     module ClassMethods
       # Returns the parent "embedded_in" relationship for this document
-      # @return [Mongoid::Relations::Metadata]
       def parent_relationship
         @parent_relationship ||= relations.values.find do |relation|
-          relation.macro == :embedded_in
+          relation.is_a? Mongoid::Association::Embedded::EmbeddedIn
         end
       end
     end
   end
-
 end

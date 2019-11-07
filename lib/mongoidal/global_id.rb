@@ -29,7 +29,9 @@ module Mongoidal
     protected
 
     def self.find_global_id_parents(child, result = [])
-      relation = child.class.relations.find {|k, r| r.macro == :embedded_in}
+      relation = child.class.relations.find do |k, v|
+        v.is_a? Mongoid::Association::Embedded::EmbeddedIn
+      end
 
       if relation
         relation = relation.last
@@ -107,7 +109,7 @@ module Mongoidal
         # rebuild the parent relationship if one is available
         if parent
           doc.class.relations.each do |k, relation|
-            if relation.macro == :embedded_in
+            if relation.is_a? Mongoid::Association::Embedded::EmbeddedIn
               doc.send("#{relation.name}=", parent)
               break
             end
